@@ -1,0 +1,26 @@
+$Sample
+--------
+
+The $sample stage in MongoDB's aggregation framework is used to select a random
+ set of documents from a collection. This is helpful when you want to retrieve a 
+random subset of documents for testing, analysis, or other purposes.
+
+code:-
+size: The number of random documents to return.
+
+db.collection.aggregate([
+  { $sample: { size: 2 } }
+])
+
+
+Explanation:-
+The $sample stage randomly selects 2 documents from the collection.
+
+
+
+output:-
+
+[
+  { "_id": 3, "item": "orange", "price": 8 },
+  { "_id": 5, "item": "grapes", "price": 6 }
+]

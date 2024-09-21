@@ -1,0 +1,54 @@
+$sort
+======
+sort documents based on one or more fields in ascending or descending order.
+
+db.products.aggregate([
+  { $sort: { price: 1 } }
+])
+
+
+Explanation:
+{ price: 1 }: Sorts the documents by the "price" field in
+ ascending order (smallest to largest).
+
+Note:- -1 sorts them in decending order
+---------------------------------------------------------------------------------------------------
+
+Sorting by Multiple Fields
+
+sort first by "category" in ascending order and then by "price" in descending 
+order within each category:
+
+db.products.aggregate([
+  { $sort: { category: 1, price: -1 } }
+])
+
+------------------------------------------------------------------------------------------------------
+
+Best Example for Sorting (Correct and Exact)
+
+db.products.aggregate([
+  { $group: { _id: "$category", totalSales: { $sum: "$price" } } },
+  { $sort: { totalSales: -1 } }
+])
+
+
+
+
+
+---------------------------------------------------------------------------------------------------------
+
+************
+if you wanted to get the top 3 most expensive items, you would use $sort and $limit together:
+
+
+command
+
+db.collection.aggregate([
+  { $sort: { price: -1 } },  // Sort by price in descending order
+  { $limit: 3 }              // Limit to the top 3 documents
+])
+
+This combination would give you the top 3 most expensive items in your collection.
+
+

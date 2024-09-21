@@ -1,0 +1,12 @@
+CRUD operation Timing (2 hour 24 min to 2 hour 54 min)
+--------------------------------------------------------
+
+1. updateOne()  and updateMany()
+
+2. Removing and Renaming Fields
+
+3. Updating arrays and Embedded Documents
+
+4. Delete Operations   
+
+

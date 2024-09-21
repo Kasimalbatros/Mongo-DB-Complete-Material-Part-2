@@ -1,0 +1,21 @@
+$skip :- skip a specified number of documents in the pipeline.
+
+Command
+
+db.collection.aggregate([
+  { $skip: 2 }
+])
+
+it will show only two documents.
+
+********************************************************************************************
+
+Command:-
+
+db.collection.aggregate([
+  { $skip: 2 },   // Skip the first 2 documents (first page)
+  { $limit: 2 }   // Limit the result to 2 documents (second page)
+])
+
+
+This will show you 2 documents after skipping the 2 top documents. 

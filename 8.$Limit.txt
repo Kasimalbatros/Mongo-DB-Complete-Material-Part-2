@@ -1,0 +1,29 @@
+$limit  :- It limits number of documents returned
+-------
+
+db.collection.aggregate([
+  { $limit: 2 }
+])
+
+
+output:-
+
+[
+  { "_id": 1, "item": "apple", "price": 10 },
+  { "_id": 2, "item": "banana", "price": 5 }
+]
+
+---------------------------------------------------------------------------------------------------------
+
+************
+if you wanted to get the top 3 most expensive items, you would use $sort and $limit together:
+
+
+command
+
+db.collection.aggregate([
+  { $sort: { price: -1 } },  // Sort by price in descending order
+  { $limit: 3 }              // Limit to the top 3 documents
+])
+
+This combination would give you the top 3 most expensive items in your collection.

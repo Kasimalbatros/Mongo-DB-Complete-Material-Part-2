@@ -1,0 +1,267 @@
+Aggregation in MongoDB   (Most Important Topic in MongoDB)
+-------------------------------------------------------------------
+
+3 hour to 4 hour 14 min Thapa technical Video (5 hour 20 min video)
+
+----------------------------------------------------------------------------------------------
+
+The most commonly used aggregation framework in MongoDB is the aggregation pipeline, 
+which consists of multiple stages that transform documents.
+
+Aggregation pipeline means we can filter particular data multiple times (chaining of output possible in Aggregation) 
+Basic Aggregation Pipeline
+
+1. $match (Filter documents) :- It works same as find method but in this we can do chaining
+
+EX1 :---> db.products.aggregate([{$match:{"name":"Sleek Wooden Tuna"}}])
+EX2 :--->  db.products.aggregate([{$match:{price:{$gt:100}}}])
+_______________________________________________________________________________________________________________
+2. $group (Group documents)  :- Works Just like reduce method in Javascript. It will return
+sum,count,average of multiple documnets. Also find repeted documents.
+Group returns single value means sum, average etc
+
+Ex:- db.products.aggregate([{$group:{_id:"$company",totalProducts:{$sum:1}}}])
+
+Ex:- db.products.aggregate([{$group:{_id:"$company",totalProducts:{$sum:"$price"}}}])
+
+$sum:-1 represents Add them one by one.
+
+Q1.find the quantity =5 , group them with same quantity and find the average price  ?
+
+Solution:-
+
+ db.sales.aggregate([{$match:{quantity:5},{$group:{_id:$quantity, priceTotal:{$sum:'$price'},priceAvg:{$avg:$price}}}])
+
+$sum: $ price represents Add them one price field with another price field .
+
+Note:- we can create Star rating in Flipkart using Group in Aggregation. 
+
+Note:- Practice yourself how we can use match and group at the same time
+________________________________________________________________________________________________________________________
+3. $sort (Sort documents)]  :- Sort the data in ascending or descending order.
+
+Ex:- db.products.aggregate([{
+$match:{price:{$gt:1100}}},
+ {$group:{_id:"$comany",totalprice:{$sum:"$price"}}},
+{$sort:{totalprice:1}}])
+
+Note:- 1 for Ascending order
+Note:- -1 for Decending order
+
+____________________________________________________________________________________________________________________________
+
+4. $project (Shape the documents) :-
+
+  This is Exact Similar to project in MongoDB. Include and exclude field inside 
+  documents.
+
+Ex:-
+
+db.products.aggregate([{$project:{price:1}}])
+
+{ price: 1 }: Inside the $project, this part means "include the price field in the output." 
+When you set a field to 1, it means you want to include that field.
+ Setting a field to 0 would exclude it.
+
+Note:- 1 for incude({ price: 1 }  showing in the output).
+
+Note:- 0 for Exclude({ price: 1 } Showing other than this )
+
+Example 2:-
+
+db.products.aggregate([{
+$project:{price:1,discountPrice:{$multiply:['$price',0.8]}}}])
+
+This gives discounted value  
+
+(channing in Aggragation Is possible. Further filteration of data is possible)
+
+_____________________________________________________________________________________________________________________________
+
+** $push   (push filed in document as array of objects)
+
+Ex:-
+
+db.products.aggregate([{$match:{price:{$gt:1200}}},{$group:{_id:'$price',allColors:{$push:'$color'}}}])
+
+5. $unwind (Deconstruct array fields)   ---> destructuring the Array.  (Read Yourself)
+
+6. $addFields (Add new fields)
+
+--> Adds elements  to an array field while preventing dublicates.
+
+7. $limit (Limit the number of documents)
+
+8. $lookup (Join documents from another collection)
+
+9. $skip (Skip a number of documents)  
+
+** $filter
+
+10. $out (Write the result to a new collection)\
+
+11. $count (Count the number of documents)
+
+12. $sample (Randomly select documents)
+
+====================================================================================================
+                             Detailed Infomation of each written Below
+====================================================================================================
+
+1. $match (Filter documents)
+Filters documents to pass only those that match the specified condition to the next stage.
+
+Example: Get all documents where the status is "active":
+
+javascript
+Copy code
+db.collection_name.aggregate([
+   { $match: { status: "active" } }
+])
+
+===========================================
+2. $group (Group documents)
+Groups input documents by a specified _id expression and applies accumulator expressions to compute the values of output fields.
+
+Example: Group documents by status and count the number of documents in each group:
+
+javascript
+Copy code
+db.collection_name.aggregate([
+   { $group: { _id: "$status", count: { $sum: 1 } } }
+])
+_id: The field by which you want to group documents ($status here).
+$sum: An accumulator that adds values (here it's summing up 1 for each document).
+
+===================================================
+3. $project (Shape the documents)
+Used to include, exclude, or add fields in the output documents.
+
+Example: Show only the name and age fields in the result:
+
+javascript
+Copy code
+db.collection_name.aggregate([
+   { $project: { name: 1, age: 1, _id: 0 } }
+])
+In this example, 1 means the field is included, and _id: 0 excludes the _id field.
+
+===========================================================
+4. $sort (Sort documents)
+Sorts the documents by the specified field(s).
+
+Example: Sort documents by age in descending order:
+
+javascript
+Copy code
+db.collection_name.aggregate([
+   { $sort: { age: -1 } }  // -1 for descending, 1 for ascending
+])
+
+=============================================================
+5. $limit (Limit the number of documents)
+Limits the number of documents passed to the next stage.
+
+Example: Limit the result to 5 documents:
+
+javascript
+Copy code
+db.collection_name.aggregate([
+   { $limit: 5 }
+])
+
+=============================================================
+6. $skip (Skip a number of documents)
+Skips the first N documents in the result.
+
+Example: Skip the first 10 documents:
+
+javascript
+Copy code
+db.collection_name.aggregate([
+   { $skip: 10 }
+])
+
+================================================================
+7. $unwind (Deconstruct array fields)
+Deconstructs an array field from the input documents to output one document for each element.
+
+Example: Unwind the tags array field, so each element in the array becomes a separate document:
+
+javascript
+Copy code
+db.collection_name.aggregate([
+   { $unwind: "$tags" }
+])
+
+===============================================================
+8. $lookup (Join documents from another collection)
+Performs a left outer join to another collection to merge related data.
+
+Example: Join documents from a orders collection with a customers collection:
+
+javascript
+Copy code
+db.orders.aggregate([
+   {
+     $lookup: {
+       from: "customers",
+       localField: "customerId",
+       foreignField: "_id",
+       as: "customerInfo"
+     }
+   }
+])
+
+================================================================
+9. $addFields (Add new fields)
+Adds new fields to documents.
+
+Example: Add a new field totalPrice that is the result of multiplying quantity and price fields:
+
+javascript
+Copy code
+db.collection_name.aggregate([
+   { $addFields: { totalPrice: { $multiply: [ "$quantity", "$price" ] } } }
+])
+
+===============================================================
+10. $out (Write the result to a new collection)
+Writes the result of the aggregation pipeline to a new collection.
+
+Example: Store the result of the aggregation into a new collection resultCollection:
+
+javascript
+Copy code
+db.collection_name.aggregate([
+   { $match: { status: "active" } },
+   { $out: "resultCollection" }
+])
+
+=================================================================
+11. $count (Count the number of documents)
+Counts the number of documents that match the pipeline conditions.
+
+Example: Count how many documents have status "active":
+
+javascript
+Copy code
+db.collection_name.aggregate([
+   { $match: { status: "active" } },
+   { $count: "activeCount" }
+])
+
+=================================================================
+12. $sample (Randomly select documents)
+Randomly selects a specified number of documents from the collection.
+
+Example: Randomly select 3 documents from the collection:
+
+javascript
+Copy code
+db.collection_name.aggregate([
+   { $sample: { size: 3 } }
+])
+These are just a few of the key stages used in MongoDB aggregation pipelines.
+ Aggregation pipelines are highly flexible and allow you to process and analyze 
+your data in various ways.

@@ -1,0 +1,78 @@
+$filter
+--------
+filter elements in an array field based on a specified condition. 
+It allows you to return only the elements from an array that satisfy the condition, 
+
+
+Syntax:-
+
+{
+  $filter: {
+    input: "<array>",
+    as: "<variable>",
+    cond: <expression>
+  }
+}
+
+input: The array field that you want to filter.
+as: (Optional) A name for the variable that represents each array element in the condition.
+cond: The condition that each element must meet to be included in the result.
+
+
+Example:-
+
+Assume we have collections.
+
+[
+  {
+    "_id": 1,
+    "name": "John",
+    "scores": [95, 82, 56, 90]
+  },
+  {
+    "_id": 2,
+    "name": "Jane",
+    "scores": [75, 85, 91, 60]
+  }
+]
+
+
+We want to filter the scores array to only include scores greater than 80.  ?
+
+db.collection.aggregate([
+  {
+    $project: {
+      name: 1,
+      highScores: {
+        $filter: {
+          input: "$scores",
+          as: "score",
+          cond: { $gt: ["$$score", 80] }  // Only include scores greater than 80
+        }
+      }
+    }
+  }
+])
+
+
+output:-
+
+[
+  {
+    "_id": 1,
+    "name": "John",
+    "highScores": [95, 82, 90]
+  },
+  {
+    "_id": 2,
+    "name": "Jane",
+    "highScores": [85, 91]
+  }
+]
+
+
+
+Special case:-
+************
+
+Example 2: Filtering Based on a Field Inside an Array of Objects  (Read Yourself)

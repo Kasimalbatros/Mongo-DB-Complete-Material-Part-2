@@ -1,0 +1,144 @@
+$lookup :- (Read youself thoroughly).
+-----------------------------------------
+
+It allows you to perform a left outer join between two collections.
+
+It enables you to join data from a "foreign" (related) collection into your current
+collection based on matching values.
+
+Syntax:-
+
+db.collection.aggregate([
+  {
+    $lookup: {
+      from: "<foreignCollection>",
+      localField: "<localField>",
+      foreignField: "<foreignField>",
+      as: "<outputField>"
+    }
+  }
+])
+
+
+
+from: The name of the foreign collection to join with.
+localField: The field from the current collection to match with the foreign collection.
+foreignField: The field in the foreign collection to match with the local field.
+as: The name of the array field in which to store the joined documents.
+
+
+Example
+Let’s say we have two collections:
+------------------------------------------------------------------------
+orders Collection:
+
+[
+  { "_id": 1, "item": "apple", "price": 10, "customerId": 101 },
+  { "_id": 2, "item": "banana", "price": 5, "customerId": 102 },
+  { "_id": 3, "item": "orange", "price": 8, "customerId": 101 }
+]
+-------------------------------------------------------------------------
+customers Collection:
+
+[
+  { "_id": 101, "name": "John" },
+  { "_id": 102, "name": "Jane" }
+]
+-------------------------------------------------------------------------
+We want to join the orders collection with the customers collection on the
+ "customerId field" from orders and the "_id field" from customers.
+***************************************************************************
+
+command
+
+Aggregation with $lookup:
+
+db.orders.aggregate([
+  {
+    $lookup: {
+      from: "customers",        // Foreign collection
+      localField: "customerId", // Field from orders collection
+      foreignField: "_id",      // Field from customers collection
+      as: "customerDetails"     // Output array field
+    }
+  }
+])
+
+
+
+output:-
+
+
+[
+  {
+    "_id": 1,
+    "item": "apple",
+    "price": 10,
+    "customerId": 101,
+    "customerDetails": [
+      { "_id": 101, "name": "John" }
+    ]
+  },
+  {
+    "_id": 2,
+    "item": "banana",
+    "price": 5,
+    "customerId": 102,
+    "customerDetails": [
+      { "_id": 102, "name": "Jane" }
+    ]
+  },
+  {
+    "_id": 3,
+    "item": "orange",
+    "price": 8,
+    "customerId": 101,
+    "customerDetails": [
+      { "_id": 101, "name": "John" }
+    ]
+  }
+]
+
+
+
+
+
+Explanation:
+The $lookup stage joins the orders collection with the customers collection.
+It matches the customerId field in the orders collection with the _id field in the customers collection.
+The resulting documents contain an array field customerDetails that holds the matching customer information from the customers collection.
+
+Key Points:
+$lookup performs a left outer join, meaning all documents from the main collection are returned, even if no match is found in the foreign collection (in that case, the as field will be an empty array).
+The results are stored as an array in the field specified by as.
+You can access and manipulate the joined data within the pipeline after the $lookup.
+
+
+
+
+
+
+
+
+
+
+Special case
+************
+
+Example: Handling Unmatched Documents
+If there is no match found in the foreign collection, the as field will be an empty array. For example, if the orders collection had a document with a customerId that didn’t exist in the customers collection:
+
+
+{ "_id": 4, "item": "mango", "price": 12, "customerId": 103 }
+The output would be:
+
+
+Output would be
+
+{
+  "_id": 4,
+  "item": "mango",
+  "price": 12,
+  "customerId": 103,
+  "customerDetails": []  // No match found, so an empty array
+}

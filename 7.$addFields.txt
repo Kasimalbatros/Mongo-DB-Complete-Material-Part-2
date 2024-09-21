@@ -1,0 +1,124 @@
+$addfields
+-----------
+$addFields operator in aggregation allows you to add new fields or modify existing 
+fields within the documents being processed in the pipeline
+
+Syntax:-
+
+db.collection.aggregate([
+  {
+    $addFields: {
+      <newField>: <expression>,
+      <existingField>: <expression>  // Optional, can modify an existing field
+    }
+  }
+])
+
+-----------------------------------------------------------------------------------------
+Note:- $addFields doesn't remove any other fields in the document—it just adds or 
+modifies fields.
+-----------------------------------------------------------------------------------------
+
+Adding New value 
+Sample data
+
+[
+  { "_id": 1, "name": "John", "scores": [85, 90, 78] },
+  { "_id": 2, "name": "Jane", "scores": [95, 80, 88] }
+]
+
+We want to update the price field to include a tax of 10%.
+ We can use $addFields to modify the price field:
+--------------------------------------------------------------------------------------------------
+Command
+
+db.collection.aggregate([
+  {
+    $addFields: {
+      averageScore: { $avg: "$scores" }
+    }
+  }
+])
+
+--------------------------------------------------------------------------------------------------
+output:-
+
+[
+  { "_id": 1, "name": "John", "scores": [85, 90, 78], "averageScore": 84.33 },
+  { "_id": 2, "name": "Jane", "scores": [95, 80, 88], "averageScore": 87.67 }
+]
+
+
+
+================================================================================================
+
+Modify the price field by adding tax
+Sample data
+
+[
+  { "_id": 1, "item": "apple", "price": 10 },
+  { "_id": 2, "item": "banana", "price": 5 }
+]
+
+------------------------------------------------------------------------------------------------------
+command
+
+db.collection.aggregate([
+  {
+    $addFields: {
+      price: { $multiply: ["$price", 1.1] }  // Adding 10% tax
+    }
+  }
+])
+
+-----------------------------------------------------------------------------------------------------
+output:-
+
+[
+  { "_id": 1, "item": "apple", "price": 11 },
+  { "_id": 2, "item": "banana", "price": 5.5 }
+]
+
+
+
+Explanation:
+The existing price field is modified by multiplying it by 1.1 (which adds 10% tax).
+$multiply is used to perform the arithmetic operation.
+
+
+*********************************************************************************************************
+Special case:-
+
+Adding Multiple Fields
+You can also add multiple fields in one $addFields stage:
+
+Sample data
+
+[
+  { "_id": 1, "name": "John", "scores": [85, 90, 78] },
+  { "_id": 2, "name": "Jane", "scores": [95, 80, 88] }
+]
+
+---------------------------------------------------------------------------------------------------------
+Command
+
+db.collection.aggregate([
+  {
+    $addFields: {
+      averageScore: { $avg: "$scores" },
+      grade: {
+        $cond: { if: { $gte: [{ $avg: "$scores" }, 85] }, then: "A", else: "B" }
+      }
+    }
+  }
+])
+
+---------------------------------------------------------------------------------------------------------
+Output:-
+
+[
+  { "_id": 1, "name": "John", "scores": [85, 90, 78], "averageScore": 84.33, "grade": "B" },
+  { "_id": 2, "name": "Jane", "scores": [95, 80, 88], "averageScore": 87.67, "grade": "A" }
+]
+
+

@@ -1,0 +1,70 @@
+$project
+========
+It is used to include, exclude, or compute new fields in the output documents.
+
+Ex:-
+
+db.products.aggregate([
+  { 
+    $project: { 
+      name: 1, 
+      price: 1, 
+      description: 0 
+    }
+  }
+])
+
+Note:-
+
+name: 1: Includes the "name" field in the result.
+price: 1: Includes the "price" field in the result.
+description: 0: Excludes the "description" field from the output.
+
+---------------------------------------------------------------------------------------------------
+Most Important
+
+Adding Computed Fields
+You can add new fields to the output that are computed using expressions. 
+For example, let's add a field called "discountedPrice" that subtracts a fixed 
+discount from the "price":
+
+Ex:-
+
+db.products.aggregate([
+  { 
+    $project: { 
+      name: 1, 
+      price: 1, 
+      discountedPrice: { $subtract: [ "$price", 100 ] }
+    }
+  }
+])
+
+
+Note:-
+
+Explanation:
+discountedPrice: { $subtract: [ "$price", 100 ] }: Adds a new field "discountedPrice", 
+which subtracts 100 from the "price" field for each document.
+
+
+Note:- we have multiple operations
+
+$add
+$multiply
+$divide
+$mod
+$ceil
+$floor
+$abs
+...manymore
+
+output:-
+
+[
+  { "_id": 1, "name": "Laptop", "price": 1000, "discountedPrice": 900 },
+  { "_id": 2, "name": "Phone", "price": 500, "discountedPrice": 400 }
+]
+
+
+

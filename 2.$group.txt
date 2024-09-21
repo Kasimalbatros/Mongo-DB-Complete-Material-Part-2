@@ -1,0 +1,39 @@
+$group  (Flipkart Star Rating is set by using group pipeline)
+=======
+ group documents by a specific field or expression and to perform aggregation 
+operations like sum, average, count, etc
+
+Syntax:-
+
+db.collection.aggregate([
+  { 
+    $group: { 
+      _id: <expression>, 
+      <field1>: { <accumulator>: <expression1> }, 
+      <field2>: { <accumulator>: <expression2> }
+    }
+  }
+])
+
+
+Note:- <accumulator>: This is an aggregation operator (like $sum, $avg, $max, $min,$first
+$last,$push,$addToSet etc.)
+
+$first: Returns the first document's value for a field in each group.
+$last: Returns the last document's value for a field in each group.
+$push: Pushes values from the field into an array.
+$addToSet: Adds unique values from the field into an array.
+
+Note:- {$sum: 1}  add the douments one after one
+
+---------------------------------------------------------------------------------------------------
+Example:-
+
+db.products.aggregate([
+  { 
+    $group: { 
+      _id: "$category", 
+      totalSales: { $sum: "$price" } 
+    } 
+  }
+])

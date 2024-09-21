@@ -1,0 +1,38 @@
+INDEXES used to increase the speed of query.
+Ex: weh 10,000 documents and we want to search Air frier if i got this in all this in 100 documents
+then searching seraching rest 9900 is waste of time. In this plcae Index plays a crucial rols
+
+
+db.collection_name.explain();    ---> showing details
+
+db.collection_name.explain("executionStats"); --> Show you timing speed and all details
+
+Creating Indexes.
+-------------------
+
+db.collection_name.createIndex({"name":1});
+
+Shwoing default Index created inside the collection
+======================================================
+db.collectioname.getIndex();
+
+
+Dropping Index
+-----------------
+db.collectionname.dropIndex()
+
+
+creating Unique Index ---> Read Youself
+
+
+NOTE:-
+when You dont need to use Indexes ?
+
+1. When you know ,Approx 60% data will be returning  by the command then don't make indexes 
+because indexes stores their data separately with collections. so it takes unnecessary space in memory
+this leads take longer period of time to execute the codes.
+
+
+
+Note:- Indexes is not imporatant in MongoDB  (learn just for interview perspective)
+

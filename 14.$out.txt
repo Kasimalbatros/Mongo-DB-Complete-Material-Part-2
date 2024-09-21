@@ -1,0 +1,50 @@
+$out
+----
+is used to write the result of an aggregation pipeline to a collection. 
+It either creates a new collection or replaces the existing one with the result 
+of the pipeline.
+
+syntax:-
+
+db.collection.aggregate([
+  { <aggregation stages> },
+  { $out: "<outputCollection>" }
+])
+
+
+Example:-
+
+Assume we have below sample
+
+[
+  { "_id": 1, "item": "apple", "price": 10 },
+  { "_id": 2, "item": "banana", "price": 5 },
+  { "_id": 3, "item": "orange", "price": 8 }
+]
+
+
+
+command:-
+
+db.orders.aggregate([
+  { $match: { price: { $gt: 7 } } },  // Filter documents with price > 7
+  { $out: "expensiveOrders" }         // Write the result to a new collection
+])
+
+
+We want to filter the orders collection to include only documents where the price
+ is greater than 7 and save this result into a new collection called expensiveOrders:
+
+
+output:-
+Result in the expensiveOrders collection: (orders collection result comes out on expensiveOrders collection)
+
+[
+  { "_id": 1, "item": "apple", "price": 10 },
+  { "_id": 3, "item": "orange", "price": 8 }
+]
+
+
+Note:-  expensiveOrders collection newly created if Already exists with the same name then 
+it above result is the overwritten. (This above result becomes your default result)
+

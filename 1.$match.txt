@@ -1,0 +1,39 @@
+1. $match   ---> works similar like find in mongoDB to retrive data from document.
+-----------------------------------------------------------------------------------------------
+Example of command:-
+
+ db.products.aggregate([{$match:{"name":"Air Fryer"}}])
+------------------------
+ db.products.aggregate([{$match:{price:{$eq:129}}}])
+------------------------------
+ db.products.aggregate([
+  { $match: { $and: [ { "category": "electronics" }, { "price": { $gt: 100 } } ] } }
+])
+
+------------------------------------
+Note:- This will return all documents where the "price" is between 100 and 500 inclusive.
+
+ db.products.aggregate([
+  { $match: { "price": { $gte: 100, $lte: 500 } } }
+])
+
+-----------------------------------------------
+You can combine $match with other stages in the aggregation pipeline, such as $group 
+or $sort. For example:
+
+db.products.aggregate([
+  { $match: { "category": "electronics" } },
+  { $group: { _id: "$brand", totalSales: { $sum: "$price" } } },
+  { $sort: { totalSales: -1 } }
+])
+
+
+In this pipeline:
+
+$match: Filters the documents where the "category" is "electronics".
+$group: Groups the documents by "brand" and calculates the total sales (sum of "price").
+$sort: Sorts the results by "totalSales" in descending order.
+
+
+
+

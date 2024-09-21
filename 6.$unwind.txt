@@ -1,0 +1,51 @@
+$unwind
+--------
+The $unwind operator in MongoDB is used in an aggregation pipeline to deconstruct an 
+array field from the input documents and output a document for each element of the array.
+
+Example:-
+
+Sample Data:-
+
+[
+  { "_id": 1, "category": "fruit", "items": ["apple", "banana", "orange"] },
+  { "_id": 2, "category": "vegetable", "items": ["carrot", "broccoli"] }
+]
+
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - - - - - - - - - - - -
+
+Command
+--------
+db.collection.aggregate([
+  { $unwind: "$items" }
+])
+
+---------------------------------------------------------------------------------------------
+
+Output:-
+
+The $unwind stage takes the items array and creates separate documents for each element in the array.
+
+[
+  { "_id": 1, "category": "fruit", "items": "apple" },
+  { "_id": 1, "category": "fruit", "items": "banana" },
+  { "_id": 1, "category": "fruit", "items": "orange" },
+  { "_id": 2, "category": "vegetable", "items": "carrot" },
+  { "_id": 2, "category": "vegetable", "items": "broccoli" }
+]
+
+
+
+***************************************************************************************************
+Key Points:
+$unwind is useful when you want to perform further operations on individual array elements.
+
+$unwind breaks arrays into multiple documents, essentially "spreading out" array 
+elements across individual documents.
+
+$push collects values from multiple documents and combines them into an array within a 
+single document.
+
+
+Note:- $unwind is Almost just opposite to $push in Aggregation.
+

@@ -1,0 +1,17 @@
+
+$count:- count number of documents .
+
+db.collection.aggregate([
+  { $count: "totalDocuments" }
+])
+
+
+Note:- totalDocuments is the name of field
+
+------------------------------------------------------------------------------------------------------------
+
+Output:-
+
+[
+  { "totalDocuments": 4 }
+]

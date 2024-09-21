@@ -1,0 +1,35 @@
+$push
+------
+used to append a value to an array. When used with the $group stage, for example, it 
+collects values from the grouped documents into an array.
+
+Example:-
+Sample data
+[
+  { "_id": 1, "category": "fruit", "item": "apple" },
+  { "_id": 2, "category": "fruit", "item": "banana" },
+  { "_id": 3, "category": "vegetable", "item": "carrot" },
+  { "_id": 4, "category": "fruit", "item": "orange" },
+  { "_id": 5, "category": "vegetable", "item": "broccoli" }
+]
+
+- -  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+Command
+db.collection.aggregate([
+  {
+    $group: {
+      _id: "$category",
+      items: { $push: "$item" }
+    }
+  }
+])
+
+
+---------------------------------------------------------------------------------
+output:-
+
+[
+  { _id: 'fruit', items: [ 'banana', 'apple', 'orange' ] },
+  { _id: 'vegetable', items: [ 'carrot', 'broccoli' ] }
+]
+
